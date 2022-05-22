@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Managment System</title>
+    <style>
+        #navbar{
+                width:100%;
+                height:60px;
+                background-color: rgba(0, 0, 0, 0.694);
+                color:rgb(233, 221, 221);
+                display:flex;
+                justify-content: space-around;
+                
+            }
+            #navbar>div{
+                font-size: 29px;
+                /* color:white; */
+                display: flex;
+                justify-content: center;
+                align-items: center;     
+            }
+            /* .........nav css....... */
+            #formdiv{
+                height:250px;
+                width:25%;
+                margin:auto;
+                margin-top:50px;
+               
+            }
+            
+    </style>
+</head>
+<body>
+    <!-- ...............Navbar......... -->
+    <div id="navbar">
+        
+    </div>
+    <!-- ............Navbar end......... -->
+    <div id="formdiv">
+        <form action="" id="form">
+            <label for="">Name:-</label><br>
+            <input type="text" id="name" placeholder="Enter Name"><br>
+            <label for="">Course:-</label><br>
+            <input type="text" id="course" placeholder="Enter Course"><br>
+            <label for="">Unit:-</label><br>
+            <input type="number" id="unit" placeholder="Unit details"><br>
+            <label for="">Image URL:-</label><br>
+            <input type="text" id="imgurl" placeholder="Image url"><br>
+            <label for="">Batch:-</label><br>
+            <input type="number" id="batch" placeholder="Batch"><br>
+            <input  type="submit" value="Submit">
+        </form>
+    </div>
+    
+</body>
+</html>
+<script>
+    document.getElementById("form").addEventListener("submit",storedata)
+   var arrData=JSON.parse(localStorage.getItem("database")) || [];
+    function storedata(){
+        event.preventDefault()
+        var dataobj={
+            name:form.name.value,
+            course:form.course.value,
+            unit:form.unit.value,
+            imgurl:form.imgurl.value,
+            batch:form.batch.value,
+        }
+        //console.log(dataobj)
+        arrData.push(dataobj)
+        console.log(arrData)
+        localStorage.setItem("database",JSON.stringify(arrData));
+        window.location.reload();
+   }
+     // .........batch detail & total number.........
+     function calculation(){
+        let dataArr=JSON.parse(localStorage.getItem("database")) || [];
+        let obj={};
+        for(let i=0;i<dataArr.length;i++){
+            if(!obj[dataArr[i].batch]){
+              obj[dataArr[i].batch]=0; 
+            }
+        }
+        for(let i=0;i<dataArr.length;i++){
+              obj[dataArr[i].batch]++; 
+         }
+         console.log(obj)
+         for(key in obj){
+            let nav=document.getElementById("navbar");
+            let div1=document.createElement("div");
+            div1.innerText="Batch"+key+" - "+obj[key];
+            let div2=document.createElement("div");
+            div2.innerText="|"
+            nav.append(div1,div2)
+         }
+    }
+    calculation()
+</script>

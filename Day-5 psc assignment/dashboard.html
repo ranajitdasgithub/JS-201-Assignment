@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #navbar{
+                width:100%;
+                height:60px;
+                background-color: rgba(0, 0, 0, 0.694);
+                color:rgb(233, 221, 221);
+                display:flex;
+                justify-content: space-around;
+                
+            }
+            #navbar>div{
+                font-size: 29px;
+                /* color:white; */
+                display: flex;
+                justify-content: center;
+                align-items: center;     
+            }
+            #container{
+                display:grid;
+                grid-template-columns: repeat(4,1fr);
+                gap:30px;
+                margin:auto;
+                margin-top:50px;
+                margin-bottom:70px;
+            }
+            #container>div{
+                height:auto;
+                width:90%;
+                margin:auto;
+                text-align: center;
+                font-size: 18px;
+                box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+            }
+            img{
+                width:100%;
+                height:300px;
+            }
+    </style>
+</head>
+<body>
+    <!-- ...............Navbar......... -->
+    <div id="navbar">
+        
+    </div>
+    <!-- ............Navbar end......... -->
+    <div id="container">
+
+    </div>
+</body>
+</html>
+<script>
+    function append(){
+        var dataArr=JSON.parse(localStorage.getItem("database")) || [];
+        let containerdiv=document.getElementById("container");
+        container.innerHTML=null;
+        dataArr.forEach(function(elem,index){
+            let div=document.createElement("div");
+            let img=document.createElement("img");
+            img.src=elem.imgurl;
+            let name=document.createElement("p");
+            name.innerText=elem.name;
+            let course=document.createElement("p");
+            course.innerText=elem.course;
+            let unit=document.createElement("p");
+            unit.innerText="Unit:- "+elem.unit;
+            let batch=document.createElement("p");
+            batch.innerText="Batch - "+elem.batch;
+
+            let btn=document.createElement("button");
+            btn.innerText="Remove";
+            btn.addEventListener("click",function(){
+                removeFun(index);
+            });
+            div.append(img,name,course,unit,batch,btn)
+            //console.log(div)
+            containerdiv.append(div)
+            //console.log(containerdiv)
+        });
+    }
+    append()
+    function removeFun(index){
+        let dataArr=JSON.parse(localStorage.getItem("database")) || [];
+        let newdataArr=dataArr.filter(function(ele,i){
+            if(index==i){
+                let trashdata=JSON.parse(localStorage.getItem("trash")) || [];
+                trashdata.push(ele);
+                localStorage.setItem("trash",JSON.stringify(trashdata))
+            }
+            else{
+                return i !== index;
+            }
+        });
+        localStorage.setItem("database",JSON.stringify(newdataArr));
+        window.location.reload();
+    }
+    // .........batch detail & total number.........
+    function calculation(){
+        let dataArr=JSON.parse(localStorage.getItem("database")) || [];
+        let obj={};
+        for(let i=0;i<dataArr.length;i++){
+            if(!obj[dataArr[i].batch]){
+              obj[dataArr[i].batch]=0; 
+            }
+        }
+        for(let i=0;i<dataArr.length;i++){
+              obj[dataArr[i].batch]++; 
+         }
+         console.log(obj)
+         for(key in obj){
+            let nav=document.getElementById("navbar");
+            let div1=document.createElement("div");
+            div1.innerText="Batch"+key+" - "+obj[key];
+            let div2=document.createElement("div");
+            div2.innerText="|"
+            nav.append(div1,div2)
+         }
+    }
+    calculation()
+</script>
